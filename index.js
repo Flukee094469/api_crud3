@@ -13,33 +13,33 @@ app.get('/', (req, res) => {
     res.send('Hello world!!')
 })
 
-app.get('/users', (req, res) => {
+app.get('/books', (req, res) => {
     connection.query(
-        'SELECT * FROM users',
+        'SELECT * FROM books', // เปลี่ยนจาก 'users' เป็น 'books'
         function (err, results, fields) {
             res.send(results)
         }
     )
 })
 
-app.get('/users/:id', (req, res) => {
+app.get('/books/:id', (req, res) => {
     const id = req.params.id;
     connection.query(
-        'SELECT * FROM users WHERE id = ?', [id],
+        'SELECT * FROM books WHERE id = ?', [id], // เปลี่ยนจาก 'users' เป็น 'books'
         function (err, results, fields) {
             res.send(results)
         }
     )
 })
 
-app.post('/users', (req, res) => {
+app.post('/books', (req, res) => {
     connection.query(
-        'INSERT INTO `users` (`fname`, `lname`, `username`, `password`, `avatar`) VALUES (?, ?, ?, ?, ?)',
-        [req.body.fname, req.body.lname, req.body.username, req.body.password, req.body.avatar],
+        'INSERT INTO `books` (`title`, `detail`, `price`, `image`) VALUES (?, ?, ?, ?)', // ปรับคำสั่ง SQL ให้ตรงกับฟิลด์ในตาราง books
+        [req.body.title, req.body.detail, req.body.price, req.body.image],
          function (err, results, fields) {
             if (err) {
-                console.error('Error in POST /users:', err);
-                res.status(500).send('Error adding user');
+                console.error('Error in POST /books:', err);
+                res.status(500).send('Error adding book');
             } else {
                 res.status(200).send(results);
             }
@@ -47,25 +47,26 @@ app.post('/users', (req, res) => {
     )
 })
 
-app.put('/users', (req, res) => {
+app.put('/books', (req, res) => {
     connection.query(
-        'UPDATE `users` SET `fname`=?, `lname`=?, `username`=?, `password`=?, `avatar`=? WHERE id =?',
-        [req.body.fname, req.body.lname, req.body.username, req.body.password, req.body.avatar, req.body.id],
+        'UPDATE `books` SET `title`=?, `detail`=?, `price`=?, `image`=? WHERE id =?', // ปรับคำสั่ง SQL
+        [req.body.title, req.body.detail, req.body.price, req.body.image, req.body.id],
          function (err, results, fields) {
             res.send(results)
         }
     )
 })
 
-app.delete('/users', (req, res) => {
+app.delete('/books', (req, res) => {
     connection.query(
-        'DELETE FROM `users` WHERE id =?',
+        'DELETE FROM `books` WHERE id =?', // ปรับคำสั่ง SQL
         [req.body.id],
          function (err, results, fields) {
             res.send(results)
         }
     )
 })
+
 
 app.listen(process.env.PORT || 3000, () => {
     console.log('CORS-enabled web server listening on port 3000')
